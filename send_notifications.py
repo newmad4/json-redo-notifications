@@ -1,21 +1,5 @@
-import json
-
-import requests
-
 from services import NotificationService
-
-REDO_DATA_SOURCE_URL = "https://raw.githubusercontent.com/UN-ICC/notifications-processor/master/notifications_log.json"
-MANDATORY_FIELDS = {
-    "sms": ("phone", "name"),
-    "email": ("email", "name"),
-    "post": ("url", "name"),
-}
-
-
-def fetch_notifications_data() -> list:
-    response = requests.get(REDO_DATA_SOURCE_URL)
-    return response.json()
-
+from utils import fetch_notifications_data
 
 notificator = NotificationService()
 for data in fetch_notifications_data():
