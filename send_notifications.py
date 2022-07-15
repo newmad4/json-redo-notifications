@@ -1,4 +1,5 @@
 import json
+from abc import ABC, abstractmethod
 
 import requests
 
@@ -58,3 +59,13 @@ for data in fetch_notifications_data():
 
 with open("processed_notifications.json", "w") as f:
     json.dump(processed_data, f, indent=2)
+
+
+class AbstractNotificationService(ABC):
+    """Abstract class for notification services."""
+
+    destination_parameter_name: str
+
+    @abstractmethod
+    def send(self, destination_parameter_value: str, data: dict):
+        raise NotImplemented
