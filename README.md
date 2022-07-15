@@ -1,4 +1,4 @@
-## JSON REDO log service
+## JSON REDO log application
 
 * This service provide resend/reply functionality of pending operations from JSON log file.
 * Program send SMS, make POST request and sent emails using high-level design with
