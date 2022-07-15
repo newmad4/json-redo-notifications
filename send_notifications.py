@@ -17,26 +17,6 @@ def fetch_notifications_data() -> list:
     return response.json()
 
 
-def send_sms(phone: str, data: dict) -> None:
-    print(f"SMS sent to {phone}. Data: {data}")
-
-
-def send_email(email: str, data: dict) -> None:
-    print(f"EMAIL sent to {email}. Data: {data}")
-
-
-def send_post(url: str, data: dict) -> None:
-    print(f"POST sent to {url}. Data: {data}")
-
-
-def is_valid_data(notification_type: str, data: dict) -> bool:
-    for parameter_name in MANDATORY_FIELDS.get(notification_type):
-        if not data.get(parameter_name):
-            return False
-    return True
-
-
-processed_data = list()
 notificator = NotificationService()
 for data in fetch_notifications_data():
     try:
@@ -44,7 +24,5 @@ for data in fetch_notifications_data():
     except ValueError as err:
         print(err)
         continue
-    processed_data.append(data)
 
-with open("processed_notifications.json", "w") as f:
-    json.dump(processed_data, f, indent=2)
+notificator.log_success_results()

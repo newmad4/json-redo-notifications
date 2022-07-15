@@ -1,3 +1,4 @@
+import json
 from abc import ABC, abstractmethod
 
 
@@ -72,12 +73,19 @@ class NotificationFactory:
 class NotificationService:
     """Main service for send different notification types."""
 
-    @staticmethod
-    def send(data) -> None:
+    def __init__(self):
+        self.processed_notifications = list()
+
+    def send(self, data) -> None:
         service = factory.get_service(data["type"])
         if not service.is_valid_data(data):
             raise ValueError(f"Invalid notification data: {data}")
         service.send(data[service.destination_parameter_name], data)
+        self.processed_notifications.append(data)
+
+    def log_success_results(self):
+        with open("processed_notifications.json", "w") as f:
+            json.dump(self.processed_notifications, f, indent=2)
 
 
 factory = NotificationFactory()
