@@ -23,3 +23,11 @@ Setup environment: create .env file in the root directory.
   </details>
 
 If not - default url would be used.
+
+### How to run application:
+```
+$ git clone https://github.com/newmad4/json-redo-notifications.git
+$ cd json-redo-notifications
+$ docker image build -t json_redo_log_app .
+$ docker run json_redo_log_app
+``` 
