@@ -5,13 +5,14 @@
 hidden implementations of end service providers.
 * All notifications which must be processed  are validated and information of invalid data logged in system.
 * There were also attempts for handle interaction errors with end service providers which could be 
-used for autoretry send notifications.
+used for auto retry send notifications.
 * Successfully operations would be stored in result JSON file.
 
 
 ### Getting started
-Setup environment configuration (create .env file in the root of directory).
-You could provide your own url to JSON file with setup REDO_DATA_SOURCE_URL.
+If you want to use your own url to JSON file you need to add REDO_DATA_SOURCE_URL in environment variables.
+
+Setup environment: create .env file in the root directory.
 
   <details>
     <summary><i><b>.env</b> example</i></summary>
