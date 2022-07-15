@@ -55,6 +55,15 @@ class NotificationFactory:
         return service()
 
 
+class NotificationService:
+    """Main service for send different notification types."""
+
+    @staticmethod
+    def send(data) -> None:
+        service = factory.get_service(data["type"])
+        service.send(data[service.destination_parameter_name], data)
+
+
 factory = NotificationFactory()
 factory.register_type("post", PostService)
 factory.register_type("email", EmailService)
