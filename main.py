@@ -1,5 +1,5 @@
-import notificator
+from notificator import send_notifications
 
 
 if __name__ == '__main__':
-    notificator.send_notifications()  # Call our program
+    send_notifications()  # Call our program
