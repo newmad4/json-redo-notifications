@@ -69,3 +69,30 @@ class AbstractNotificationService(ABC):
     @abstractmethod
     def send(self, destination_parameter_value: str, data: dict):
         raise NotImplemented
+
+
+class EmailService(AbstractNotificationService):
+    """Service for send email."""
+
+    destination_parameter_name = "email"
+
+    def send(self, email: str, data: dict) -> None:
+        print(f"EMAIL sent to {email}. Data: {data}")
+
+
+class SMSService(AbstractNotificationService):
+    """Service for send SMS."""
+
+    destination_parameter_name = "phone"
+
+    def send(self, phone: str, data: dict) -> None:
+        print(f"SMS sent to {phone}. Data: {data}")
+
+
+class PostService(AbstractNotificationService):
+    """Service for make request to external API endpoints."""
+
+    destination_parameter_name = "url"
+
+    def send(self, url: str, data: dict) -> None:
+        print(f"POST sent to {url}. Data: {data}")
