@@ -39,13 +39,11 @@ def is_valid_data(notification_type: str, data: dict) -> bool:
 processed_data = list()
 notificator = NotificationService()
 for data in fetch_notifications_data():
-    notification_type = data["type"]
-
-    if not is_valid_data(notification_type, data):
-        print(f"Invalid notification data: {data}")
+    try:
+        notificator.send(data)
+    except ValueError as err:
+        print(err)
         continue
-
-    notificator.send(data)
     processed_data.append(data)
 
 with open("processed_notifications.json", "w") as f:

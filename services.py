@@ -1,9 +1,20 @@
 from abc import ABC, abstractmethod
 
 
+class NotificationBaseCheckMixin:
+    mandatory_parameters = ("name",)
+
+    def is_valid_data(self, data) -> bool:
+        for parameter_name in self.mandatory_parameters:
+            if not data.get(parameter_name):
+                return False
+        return True
+
+
 class AbstractNotificationService(ABC):
     """Abstract class for notification services."""
 
+    mandatory_parameters: tuple
     destination_parameter_name: str
 
     @abstractmethod
@@ -11,27 +22,30 @@ class AbstractNotificationService(ABC):
         raise NotImplemented
 
 
-class EmailService(AbstractNotificationService):
+class EmailService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for send email."""
 
+    mandatory_parameters = ("name", "email")
     destination_parameter_name = "email"
 
     def send(self, email: str, data: dict) -> None:
         print(f"EMAIL sent to {email}. Data: {data}")
 
 
-class SMSService(AbstractNotificationService):
+class SMSService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for send SMS."""
 
+    mandatory_parameters = ("name", "phone")
     destination_parameter_name = "phone"
 
     def send(self, phone: str, data: dict) -> None:
         print(f"SMS sent to {phone}. Data: {data}")
 
 
-class PostService(AbstractNotificationService):
+class PostService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for make request to external API endpoints."""
 
+    mandatory_parameters = ("name", "url")
     destination_parameter_name = "url"
 
     def send(self, url: str, data: dict) -> None:
@@ -61,6 +75,8 @@ class NotificationService:
     @staticmethod
     def send(data) -> None:
         service = factory.get_service(data["type"])
+        if not service.is_valid_data(data):
+            raise ValueError(f"Invalid notification data: {data}")
         service.send(data[service.destination_parameter_name], data)
 
 
