@@ -2,7 +2,7 @@ import json
 import logging
 from abc import ABC, abstractmethod
 
-from exceptions import EmptyMandatoryParameterError
+from exceptions import EmptyMandatoryParameterError, ProviderError
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +100,12 @@ class NotificationService:
         except EmptyMandatoryParameterError as err:
             logger.warning(err)
             return None
-        service.send(data[service.destination_parameter_name], data)
+
+        try:
+            service.send(data[service.destination_parameter_name], data)
+        except ProviderError as err:
+            logger.error(err)
+            return None
         self.processed_notifications.append(data)
 
     def log_success_results(self):
