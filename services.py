@@ -1,15 +1,31 @@
 import json
+import logging
 from abc import ABC, abstractmethod
+
+from exceptions import EmptyMandatoryParameterError
+
+logger = logging.getLogger(__name__)
 
 
 class NotificationBaseCheckMixin:
+    """Mixin with basic validations."""
+
     mandatory_parameters = ("name",)
 
-    def is_valid_data(self, data) -> bool:
+    def validate_data(self, notification_type: str, data: dict) -> None:
+        errors = list()
         for parameter_name in self.mandatory_parameters:
             if not data.get(parameter_name):
-                return False
-        return True
+                errors.append(parameter_name)
+
+        if not errors:
+            return None
+
+        parameters_name = ", ".join(errors)
+        raise EmptyMandatoryParameterError(
+            f'For notification type: "{notification_type}" parameters: "{parameters_name}" is required. '
+            f'Data: {data}.'
+        )
 
 
 class AbstractNotificationService(ABC):
@@ -65,7 +81,7 @@ class NotificationFactory:
     def get_service(self, notification_type):
         service = self._services.get(notification_type)
         if not service:
-            print("Unprocessed notification type!")
+            logger.warning("Unprocessed notification type!")
             return None
         return service()
 
@@ -77,9 +93,13 @@ class NotificationService:
         self.processed_notifications = list()
 
     def send(self, data) -> None:
-        service = factory.get_service(data["type"])
-        if not service.is_valid_data(data):
-            raise ValueError(f"Invalid notification data: {data}")
+        notification_type = data["type"]
+        service = factory.get_service(notification_type)
+        try:
+            service.validate_data(notification_type, data)
+        except EmptyMandatoryParameterError as err:
+            logger.warning(err)
+            return None
         service.send(data[service.destination_parameter_name], data)
         self.processed_notifications.append(data)
 
