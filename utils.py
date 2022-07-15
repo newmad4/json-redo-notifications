@@ -1,7 +1,6 @@
 import requests
 
-
-REDO_DATA_SOURCE_URL = "https://raw.githubusercontent.com/UN-ICC/notifications-processor/master/notifications_log.json"
+from settings import REDO_DATA_SOURCE_URL
 
 
 def fetch_notifications_data() -> list:

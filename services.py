@@ -23,7 +23,8 @@ class NotificationBaseCheckMixin:
 
         parameters_name = ", ".join(errors)
         raise EmptyMandatoryParameterError(
-            f'For notification type: "{notification_type}" parameters: "{parameters_name}" is required. '
+            f'Invalid data for notification type: "{notification_type}" '
+            f'parameters: "{parameters_name}" {"is" if len(errors) == 1 else "are"} required. '
             f'Data: {data}.'
         )
 
