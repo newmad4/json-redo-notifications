@@ -7,6 +7,16 @@ from exceptions import EmptyMandatoryParameterError, ProviderError
 logger = logging.getLogger(__name__)
 
 
+def singleton(class_):
+    instances = {}
+
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance
+
+
 class NotificationBaseCheckMixin:
     """Mixin with basic validations."""
 
@@ -40,6 +50,7 @@ class AbstractNotificationService(ABC):
         raise NotImplemented
 
 
+@singleton
 class EmailService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for send email."""
 
@@ -50,6 +61,7 @@ class EmailService(AbstractNotificationService, NotificationBaseCheckMixin):
         print(f"EMAIL sent to {email}. Data: {data}")
 
 
+@singleton
 class SMSService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for send SMS."""
 
@@ -60,6 +72,7 @@ class SMSService(AbstractNotificationService, NotificationBaseCheckMixin):
         print(f"SMS sent to {phone}. Data: {data}")
 
 
+@singleton
 class PostService(AbstractNotificationService, NotificationBaseCheckMixin):
     """Service for make request to external API endpoints."""
 
